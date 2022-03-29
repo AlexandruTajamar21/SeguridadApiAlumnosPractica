@@ -85,10 +85,21 @@ namespace SeguridadApiAlumnosPractica.Controllers
             Alumno alumno = JsonConvert.DeserializeObject<Alumno>(jsonAlumno);
             if (alumno.Nombre == "Javier" || alumno.Nombre == "Miguel" || alumno.IdAlumno == alum.IdAlumno)
             {
-                this.repo.InsertAlumno(alum.Curso, alum.Nombre, alum.Apellidos, alum.Nota);
+                this.repo.UpdateAlumno(alum.IdAlumno,alum.Curso, alum.Nombre, alum.Apellidos, alum.Nota);
                 return alum;
             }
             return Unauthorized();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("[action]")]
+        public ActionResult<Alumno> PerfilUsuario()
+        {
+            List<Claim> claims = HttpContext.User.Claims.ToList();
+            string jsonAlumno = claims.SingleOrDefault(z => z.Type == "UserData").Value;
+            Alumno alumno = JsonConvert.DeserializeObject<Alumno>(jsonAlumno);
+            return alumno;
         }
     }
 }
